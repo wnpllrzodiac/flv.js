@@ -62,6 +62,12 @@ function getFeatureList() {
 }
 
 
+export let exportVideoTrack = () => {};
+function setExportVideoTrack(callback) {
+    console.log('设置导出视频的回调函数成功');
+    exportVideoTrack = callback;
+}
+
 // interfaces
 let flvjs = {};
 
@@ -80,6 +86,8 @@ flvjs.ErrorDetails = ErrorDetails;
 flvjs.FlvPlayer = FlvPlayer;
 flvjs.NativePlayer = NativePlayer;
 flvjs.LoggingControl = LoggingControl;
+
+flvjs.setExportVideoTrackFunction = setExportVideoTrack;
 
 Object.defineProperty(flvjs, 'version', {
     enumerable: true,

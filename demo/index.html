@@ -104,6 +104,20 @@
                 lazyLoadMaxDuration: 3 * 60,
                 seekType: 'range',
             });
+            
+            function getVideoTrack(res){
+                console.log('获得了SEI信息',res);
+                let st='';
+                if(res.dataContent){
+                    res.dataContent.map(item=>{
+                        console.log(item.toString(2));
+                        st+= String.fromCharCode(item);
+                    })
+                    console.log('获得了SEI信息字符串',st);
+                }
+            }
+            flvjs.setExportVideoTrackFunction(getVideoTrack);
+            
             player.attachMediaElement(element);
             player.load();
         }

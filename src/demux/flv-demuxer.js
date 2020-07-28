@@ -1069,6 +1069,30 @@ class FLVDemuxer {
             if (unitType === 5) {  // IDR
                 keyframe = true;
             }
+            
+            if (unitType === 6) {
+                console.log('found unitType=6 SEI');
+                let payloadType = v.getUint8(offset + lengthSize + 1);
+                console.log('payloadType', payloadType);
+                //在国标中。sei payload type为5，为自定义消息
+                if (payloadType === 5) {
+                    //解析SEI 开始，根据协议进行解码
+                    let curOffset = offset + lengthSize + 2;
+                    let payloadContentLength = v.getUint8(curOffset);
+                    console.log('payloadContentLength', payloadContentLength);
+                    // uuid 16个字节 + content data
+                    let uuid = '';
+                    for (let i = 1; i <= 16; i++) {
+                        uuid += v.getUint8(++curOffset);
+                    }
+                    console.log('uuid', uuid);
+                    let payloadContentDataLength = payloadContentLength - 16;
+                    //此处可以添加自己约定的解析逻辑，然后再导出
+                    dataContent = new Uint8Array(arrayBuffer, dataOffset + curOffset, payloadContentDataLength);
+                    let result = {data: '解析的SEI数据结束', dataContent};
+                    exportVideoTrack(result);
+                }
+            }
 
             let data = new Uint8Array(arrayBuffer, dataOffset + offset, lengthSize + naluSize);
             let unit = {type: unitType, data: data};
